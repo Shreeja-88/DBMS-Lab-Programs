@@ -1,0 +1,32 @@
+# OS files
+.DS_Store
+Thumbs.db
+.dist/
+
+# VS Code
+.vscode/
+
+# IntelliJ
+.idea/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# SQL dump files
+*.sql.bak
+
+# Environment files
+.env
+
+# Python cache (if using Python scripts)
+__pycache__/
+*.pyc
