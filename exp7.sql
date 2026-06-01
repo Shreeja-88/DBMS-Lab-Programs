@@ -26,42 +26,103 @@ CREATE TABLE EMPLOYEE (
 
 INSERT INTO DEPARTMENT (Dept_ID, Dept_Name) VALUES (1, 'Sales'), (2, 'HR'), (3, 'IT'), (4, 'Finance');
 
-INSERT INTO EMPLOYEE (Emp_ID, Emp_Name, Dept_ID, Salary, Job) VALUES (1, 'John Doe', 1, 50000.00, 'Manager'),
-(2, 'Jane Smith', 2, 40000.00, 'Analyst'),
+INSERT INTO EMPLOYEE (Emp_ID, Emp_Name, Dept_ID, Salary, Job)
+VALUES
+(1, 'John Doe', 1, 75000.00, 'Manager'),
+(2, 'Jane Smith', 2, 65000.00, 'Analyst'),
 (3, 'Emily Davis', 3, 35000.00, 'Developer'),
-(4, 'Michael Brown', 1, 30000.00, 'Salesperson'),
+(4, 'Michael Brown', 1, 70000.00, 'Salesperson'),
 (5, 'Sarah Wilson', 4, 45000.00, 'Accountant'),
 (6, 'Anjali Kumar', 2, 42000.00, 'HR Specialist');
 
--- 1. Create view HighEarners
+-- 1. Create View HighEarners
+
 CREATE VIEW HighEarners AS
 SELECT Emp_Name, Salary
 FROM EMPLOYEE
 WHERE Salary > 60000;
 
--- 2. Select employees from Sales department using the view
+SELECT * FROM HighEarners;
+```
+| Emp_Name      | Salary |
+| ------------- | ------ |
+| John Doe      | 75000  |
+| Jane Smith    | 65000  |
+| Michael Brown | 70000  |
+```
+
+-- 2. Select Sales Employees Using View
+
 SELECT HE.Emp_Name, HE.Salary
 FROM HighEarners HE
-JOIN EMPLOYEE E ON HE.Emp_Name = E.Emp_Name
+JOIN EMPLOYEE E
+ON HE.Emp_Name = E.Emp_Name
 WHERE E.Dept_ID = 1;
+```
+### Output
 
--- 3. Modify the view to include job role and bonus
+| Emp_Name      | Salary |
+| ------------- | ------ |
+| John Doe      | 75000  |
+| Michael Brown | 70000  |
+```
+
+-- 3. Modify View with Job and Bonus
+
 CREATE OR REPLACE VIEW HighEarners AS
-SELECT Emp_Name, Salary, Job, Salary * 0.10 AS Bonus
+SELECT Emp_Name,
+       Salary,
+       Job,
+       Salary * 0.10 AS Bonus
 FROM EMPLOYEE
 WHERE Salary > 60000;
 
--- 4. Create an index on Salary
-CREATE INDEX idx_salary ON EMPLOYEE(Salary);
+SELECT * FROM HighEarners;
+```
 
--- Verify the impact of the index (this will depend on the database system, but generally you would use EXPLAIN or DESCRIBE)
-EXPLAIN SELECT * FROM EMPLOYEE WHERE Salary > 60000;
+| Emp_Name      | Salary | Job         | Bonus |
+| ------------- | ------ | ----------- | ----- |
+| John Doe      | 75000  | Manager     | 7500  |
+| Jane Smith    | 65000  | Analyst     | 6500  |
+| Michael Brown | 70000  | Salesperson | 7000  |
+```
 
--- 5. Drop the view and re-create it using a JOIN with DEPARTMENT
+-- 4. Create Index
+
+CREATE INDEX idx_salary
+ON EMPLOYEE(Salary);
+
+-- Verify
+
+EXPLAIN
+SELECT * FROM EMPLOYEE
+WHERE Salary > 60000;
+
+-- 5. Drop and Recreate View Using JOIN
+
 DROP VIEW HighEarners;
+
 CREATE VIEW HighEarners AS
-SELECT E.Emp_Name, E.Salary, E.Job, D.Dept_Name, E.Salary * 0.10 AS Bonus
+SELECT E.Emp_Name,
+       E.Salary,
+       E.Job,
+       D.Dept_Name,
+       E.Salary * 0.10 AS Bonus
 FROM EMPLOYEE E
-JOIN DEPARTMENT D ON E.Dept_ID = D.Dept_ID
+JOIN DEPARTMENT D
+ON E.Dept_ID = D.Dept_ID
 WHERE E.Salary > 60000;
 
+```### Check Output
+
+sql
+SELECT * FROM HighEarners;
+
+
+| Emp_Name      | Salary | Job         | Dept_Name | Bonus |
+| ------------- | ------ | ----------- | --------- | ----- |
+| John Doe      | 75000  | Manager     | Sales     | 7500  |
+| Jane Smith    | 65000  | Analyst     | HR        | 6500  |
+| Michael Brown | 70000  | Salesperson | Sales     | 7000  |
+
+```
