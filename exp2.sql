@@ -16,7 +16,7 @@ create table Employee (
 );
 
 alter table Employee
-add COMMISSION DECIMAL(10, 2);
+add column COMMISSION DECIMAL(10, 2);
 
 insert into Employee (EMPNO, ENAME, JOB, MGR, SAL, COMMISSION) values (101, 'John Doe', 'Manager', NULL, 50000.00, 5000.00),
 (102, 'Jane Smith', 'Developer', 101, 40000.00, 2000.00),

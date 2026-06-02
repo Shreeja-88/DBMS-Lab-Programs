@@ -37,8 +37,22 @@ EXCEPT
 SELECT Emp_ID FROM PROJECT_B;
 
 -- 4. Employees not working in any project
-SELECT Emp_ID
-FROM EMPLOYEE
+CREATE TABLE EMPLOYEE (
+    Emp_ID INT PRIMARY KEY,
+    Emp_Name VARCHAR(50)
+);
+
+INSERT INTO EMPLOYEE VALUES
+(1,'A'),
+(2,'B'),
+(3,'C'),
+(4,'D'),
+(5,'E'),
+(6,'F'),
+(7,'G'),
+(8,'H');
+
+SELECT Emp_ID FROM EMPLOYEE
 WHERE Emp_ID NOT IN (
     SELECT Emp_ID FROM PROJECT_A
     UNION
